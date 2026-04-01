@@ -55,7 +55,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.aaps.core.data.model.ActiveSceneState
 import app.aaps.core.data.model.RM
-import app.aaps.core.data.model.SceneAction
 import app.aaps.core.data.model.TT
 import app.aaps.ui.compose.scenes.ActiveSceneBanner
 import app.aaps.core.interfaces.notifications.AapsNotification
@@ -91,6 +90,7 @@ fun OverviewScreen(
     profileName: String,
     rawProfileName: String = "",
     profilePercentage: Int = 100,
+    profilePsId: Long = 0,
     isProfileModified: Boolean,
     profileProgress: Float,
     tempTargetText: String,
@@ -235,12 +235,7 @@ fun OverviewScreen(
                             isModified = isProfileModified,
                             progress = profileProgress,
                             onClick = { onNavigate(NavigationRequest.Element(ElementType.PROFILE_MANAGEMENT)) },
-                            sceneManaged = activeSceneState?.scene?.actions
-                                ?.filterIsInstance<SceneAction.ProfileSwitch>()
-                                ?.any { action ->
-                                    val expectedName = action.profileName.ifEmpty { activeSceneState.priorState.profileName ?: "" }
-                                    rawProfileName == expectedName && profilePercentage == action.percentage
-                                } == true
+                            sceneManaged = activeSceneState?.priorState?.scenePsId?.let { it == profilePsId && it > 0 } == true
                         )
                     }
                     // TempTarget chip (show when text is available)

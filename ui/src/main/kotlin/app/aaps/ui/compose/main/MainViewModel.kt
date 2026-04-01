@@ -204,6 +204,7 @@ class MainViewModel @Inject constructor(
                     profileName = profileText,
                     rawProfileName = profileData?.profileName ?: "",
                     profilePercentage = profileData?.percentage ?: 100,
+                    profilePsId = profileData?.originalPsId ?: 0,
                     isProfileModified = profileData?.isModified ?: false,
                     profileProgress = profileProgress,
                     // Running mode state
@@ -664,7 +665,7 @@ class MainViewModel @Inject constructor(
             }
 
             is ConfirmableAction.ActivateScene            -> {
-                val scene = sceneRepository.getScene(action.sceneId) ?: return
+                val scene = sceneRepository.getScene(action.sceneId) ?: return@launch
                 viewModelScope.launch {
                     sceneExecutor.activate(scene, action.durationMinutes)
                 }
